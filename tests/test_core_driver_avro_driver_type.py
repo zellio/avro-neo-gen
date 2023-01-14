@@ -1,0 +1,2 @@
+class TestCoreDriverAvroDriverType:
+    pass

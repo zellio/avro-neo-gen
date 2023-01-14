@@ -1,0 +1,37 @@
+#   Refer for explanation to following link:
+#   https://github.com/evilmartians/lefthook/blob/master/docs/full_guide.md
+---
+pre-commit:
+  parallel: true
+  commands:
+    black:
+      glob: "*.py"
+      run: poetry run black --check {staged_files}
+    isort:
+      glob: "*.py"
+      run: poetry run isort --check {staged_files}
+    flake8:
+      glob: "*.py"
+      run: poetry run flake8 {staged_files}
+    mypy:
+      glob: "*.py"
+      run: poetry run mypy {staged_files}
+
+pre-push:
+  parallel: true
+  commands:
+    black:
+      glob: "*.py"
+      run: poetry run black --check {all_files}
+    flake8:
+      glob: "*.py"
+      run: poetry run flake8 {all_files}
+    mypy:
+      glob: "*.py"
+      run: poetry run mypy {all_files}
+    isort:
+      glob: "*.py"
+      run: poetry run isort --check {all_files}
+    test:
+      glob: "*.py"
+      run: poetry run py.test --cov=avro_neo_gen {all_files}
