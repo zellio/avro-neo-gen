@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Core Library &mdash; Avro NeoGen  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Internals" href="internals.html" />
+    <link rel="prev" title="CLI" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Avro NeoGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Core Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#protocols">Protocols</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_type.NeoGenType"><code class="docutils literal notranslate"><span class="pre">NeoGenType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.canonical_schema"><code class="docutils literal notranslate"><span class="pre">NeoGenType.canonical_schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.canonical_schema_json"><code class="docutils literal notranslate"><span class="pre">NeoGenType.canonical_schema_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.schema"><code class="docutils literal notranslate"><span class="pre">NeoGenType.schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.schema_json"><code class="docutils literal notranslate"><span class="pre">NeoGenType.schema_json</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.decode"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable.decode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.decode_json"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable.decode_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.encode"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable.encode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.encode_json"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable.encode_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.read"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.write"><code class="docutils literal notranslate"><span class="pre">NeoGenEncodable.write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#meta-classes">Meta Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumTypeMeta"><code class="docutils literal notranslate"><span class="pre">NeoGenEnumTypeMeta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumMeta"><code class="docutils literal notranslate"><span class="pre">NeoGenEnumMeta</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#abstract-classes">Abstract Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.canonical_schema"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.canonical_schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.canonical_schema_json"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.canonical_schema_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.decode"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.decode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.decode_json"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.decode_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.encode"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.encode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.encode_json"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.encode_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.read"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.schema"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.schema_json"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.schema_json</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.write"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenObject.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.AbstractNeoGenRecordBuilder"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenRecordBuilder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.AbstractNeoGenRecordBuilder.build"><code class="docutils literal notranslate"><span class="pre">AbstractNeoGenRecordBuilder.build()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumType"><code class="docutils literal notranslate"><span class="pre">NeoGenEnumType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.NeoGenEnum"><code class="docutils literal notranslate"><span class="pre">NeoGenEnum</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenEnum.decode"><code class="docutils literal notranslate"><span class="pre">NeoGenEnum.decode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenEnum.encode"><code class="docutils literal notranslate"><span class="pre">NeoGenEnum.encode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.NeoGenFixed"><code class="docutils literal notranslate"><span class="pre">NeoGenFixed</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenFixed.bytes"><code class="docutils literal notranslate"><span class="pre">NeoGenFixed.bytes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenFixed.decode"><code class="docutils literal notranslate"><span class="pre">NeoGenFixed.decode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenFixed.encode"><code class="docutils literal notranslate"><span class="pre">NeoGenFixed.encode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenFixed.size"><code class="docutils literal notranslate"><span class="pre">NeoGenFixed.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.NeoGenRecord"><code class="docutils literal notranslate"><span class="pre">NeoGenRecord</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenRecord.decode"><code class="docutils literal notranslate"><span class="pre">NeoGenRecord.decode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.core.NeoGenRecord.encode"><code class="docutils literal notranslate"><span class="pre">NeoGenRecord.encode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-avro_neo_gen.core.utils">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.utils.record_builder_internal"><code class="docutils literal notranslate"><span class="pre">record_builder_internal()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-avro_neo_gen.core.type_defs">Type Defs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroArrayTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroArrayTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroEnumTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroEnumTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroFixedDecimalTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroFixedTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroFixedTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroMapTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroMapTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroPrimitiveTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroRecordFieldTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroRecordFieldTypeDef</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroRecordTypeDef"><code class="docutils literal notranslate"><span class="pre">AvroRecordTypeDef</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Avro NeoGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Core Library</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/core.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-library">
+<h1>Core Library<a class="headerlink" href="#core-library" title="Permalink to this heading"></a></h1>
+<section id="protocols">
+<h2>Protocols<a class="headerlink" href="#protocols" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_type.NeoGenType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.neo_gen_type.</span></span><span class="sig-name descname"><span class="pre">NeoGenType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_type.html#NeoGenType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_type.NeoGenType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Generated Avro NeoGen type Protocol.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_type.NeoGenType.canonical_schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">canonical_schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">OrderedDict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.canonical_schema" title="Permalink to this definition"></a></dt>
+<dd><p>Avro canonical schema.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_type.NeoGenType.canonical_schema_json">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">canonical_schema_json</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.canonical_schema_json" title="Permalink to this definition"></a></dt>
+<dd><p>Avro canonical schema encoded as json string.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_type.NeoGenType.schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef" title="avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef"><span class="pre">AvroPrimitiveTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroRecordTypeDef" title="avro_neo_gen.core.type_defs.AvroRecordTypeDef"><span class="pre">AvroRecordTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroEnumTypeDef" title="avro_neo_gen.core.type_defs.AvroEnumTypeDef"><span class="pre">AvroEnumTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroArrayTypeDef" title="avro_neo_gen.core.type_defs.AvroArrayTypeDef"><span class="pre">AvroArrayTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroMapTypeDef" title="avro_neo_gen.core.type_defs.AvroMapTypeDef"><span class="pre">AvroMapTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroFixedTypeDef" title="avro_neo_gen.core.type_defs.AvroFixedTypeDef"><span class="pre">AvroFixedTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef" title="avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef"><span class="pre">AvroFixedDecimalTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.schema" title="Permalink to this definition"></a></dt>
+<dd><p>Avro schema.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_type.NeoGenType.schema_json">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema_json</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#avro_neo_gen.core.neo_gen_type.NeoGenType.schema_json" title="Permalink to this definition"></a></dt>
+<dd><p>Avro schema encoded as json string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.neo_gen_encodable.</span></span><span class="sig-name descname"><span class="pre">NeoGenEncodable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Generated Avro NeoGen type Protocol for encodable schemas.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.decode">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.decode" title="Permalink to this definition"></a></dt>
+<dd><p>Ingest datum to internal state, munging based on spec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.decode_json">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable.decode_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.decode_json" title="Permalink to this definition"></a></dt>
+<dd><p>Decode datum as a json string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.encode" title="Permalink to this definition"></a></dt>
+<dd><p>Cast typed entity to representational data per caonical_schema.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.encode_json">
+<span class="sig-name descname"><span class="pre">encode_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable.encode_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.encode_json" title="Permalink to this definition"></a></dt>
+<dd><p>Encode self.encode as json string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.read">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BufferedIOBase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.read" title="Permalink to this definition"></a></dt>
+<dd><p>Read encoded avro schema via DriverProxy into a new typed instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BufferedIOBase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_encodable.html#NeoGenEncodable.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable.write" title="Permalink to this definition"></a></dt>
+<dd><p>Write instance values into an  encoded avro schema via DriverProxy.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="meta-classes">
+<h2>Meta Classes<a class="headerlink" href="#meta-classes" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_enum.NeoGenEnumTypeMeta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.neo_gen_enum.</span></span><span class="sig-name descname"><span class="pre">NeoGenEnumTypeMeta</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_enum.html#NeoGenEnumTypeMeta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumTypeMeta" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+<p>Generated Enum schema metaclass.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_enum.NeoGenEnumMeta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.neo_gen_enum.</span></span><span class="sig-name descname"><span class="pre">NeoGenEnumMeta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_enum.html#NeoGenEnumMeta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumMeta" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ProtocolMeta</span></code>, <a class="reference internal" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumTypeMeta" title="avro_neo_gen.core.neo_gen_enum.NeoGenEnumTypeMeta"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeoGenEnumTypeMeta</span></code></a></p>
+<p>Merged NeoGenEnum meta classes.</p>
+</dd></dl>
+
+</section>
+<section id="abstract-classes">
+<h2>Abstract Classes<a class="headerlink" href="#abstract-classes" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.abstract_neo_gen_object.</span></span><span class="sig-name descname"><span class="pre">AbstractNeoGenObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code>, <a class="reference internal" href="#avro_neo_gen.core.neo_gen_type.NeoGenType" title="avro_neo_gen.core.neo_gen_type.NeoGenType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeoGenType</span></code></a>, <a class="reference internal" href="#avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable" title="avro_neo_gen.core.neo_gen_encodable.NeoGenEncodable"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeoGenEncodable</span></code></a></p>
+<p>Generated type abstract class.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.canonical_schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">canonical_schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">OrderedDict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.canonical_schema" title="Permalink to this definition"></a></dt>
+<dd><p>Avro canonical schema.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.canonical_schema_json">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">canonical_schema_json</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.canonical_schema_json" title="Permalink to this definition"></a></dt>
+<dd><p>Avro canonical schema encoded as json string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.decode">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.decode" title="Permalink to this definition"></a></dt>
+<dd><p>Ingest datum to internal state, munging based on spec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.decode_json">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject.decode_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.decode_json" title="Permalink to this definition"></a></dt>
+<dd><p>Decode datum as a json string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.encode">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.encode" title="Permalink to this definition"></a></dt>
+<dd><p>Cast typed entity to representational data per caonical_schema.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.encode_json">
+<span class="sig-name descname"><span class="pre">encode_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject.encode_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.encode_json" title="Permalink to this definition"></a></dt>
+<dd><p>Encode self.encode as json string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.read">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BufferedIOBase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.read" title="Permalink to this definition"></a></dt>
+<dd><p>Read encoded avro schema via DriverProxy into a new typed instance.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef" title="avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef"><span class="pre">AvroPrimitiveTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroRecordTypeDef" title="avro_neo_gen.core.type_defs.AvroRecordTypeDef"><span class="pre">AvroRecordTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroEnumTypeDef" title="avro_neo_gen.core.type_defs.AvroEnumTypeDef"><span class="pre">AvroEnumTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroArrayTypeDef" title="avro_neo_gen.core.type_defs.AvroArrayTypeDef"><span class="pre">AvroArrayTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroMapTypeDef" title="avro_neo_gen.core.type_defs.AvroMapTypeDef"><span class="pre">AvroMapTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroFixedTypeDef" title="avro_neo_gen.core.type_defs.AvroFixedTypeDef"><span class="pre">AvroFixedTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef" title="avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef"><span class="pre">AvroFixedDecimalTypeDef</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.schema" title="Permalink to this definition"></a></dt>
+<dd><p>Avro schema.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.schema_json">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema_json</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.schema_json" title="Permalink to this definition"></a></dt>
+<dd><p>Avro schema encoded as json string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BufferedIOBase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_object.html#AbstractNeoGenObject.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject.write" title="Permalink to this definition"></a></dt>
+<dd><p>Write instance values into an  encoded avro schema via DriverProxy.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.AbstractNeoGenRecordBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.</span></span><span class="sig-name descname"><span class="pre">AbstractNeoGenRecordBuilder</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_record_builder.html#AbstractNeoGenRecordBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.AbstractNeoGenRecordBuilder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NeoGenBuilder</span></code></p>
+<p>Generated RecordSchemaBuilder abstract class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.AbstractNeoGenRecordBuilder.build">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#avro_neo_gen.core.NeoGenRecord" title="avro_neo_gen.core.neo_gen_record.NeoGenRecord"><span class="pre">NeoGenRecord</span></a></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/abstract_neo_gen_record_builder.html#AbstractNeoGenRecordBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.AbstractNeoGenRecordBuilder.build" title="Permalink to this definition"></a></dt>
+<dd><p>Build the builder target class.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.neo_gen_enum.NeoGenEnumType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.neo_gen_enum.</span></span><span class="sig-name descname"><span class="pre">NeoGenEnumType</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_enum.html#NeoGenEnumType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base generated NeoGenEnum.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenEnum">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.</span></span><span class="sig-name descname"><span class="pre">NeoGenEnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_enum.html#NeoGenEnum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenEnum" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject" title="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractNeoGenObject</span></code></a>, <a class="reference internal" href="#avro_neo_gen.core.neo_gen_enum.NeoGenEnumType" title="avro_neo_gen.core.neo_gen_enum.NeoGenEnumType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeoGenEnumType</span></code></a></p>
+<p>Generated EnumSchema base class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenEnum.decode">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_enum.html#NeoGenEnum.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenEnum.decode" title="Permalink to this definition"></a></dt>
+<dd><p>Ingest datum to internal state, munging based on spec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenEnum.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_enum.html#NeoGenEnum.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenEnum.encode" title="Permalink to this definition"></a></dt>
+<dd><p>Encode enum value as its symbol name.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenFixed">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.</span></span><span class="sig-name descname"><span class="pre">NeoGenFixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_fixed.html#NeoGenFixed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenFixed" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject" title="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractNeoGenObject</span></code></a></p>
+<p>Generated FixedSchema base class.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenFixed.bytes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bytes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#avro_neo_gen.core.NeoGenFixed.bytes" title="Permalink to this definition"></a></dt>
+<dd><p>Copy of the internal bytes array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenFixed.decode">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_fixed.html#NeoGenFixed.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenFixed.decode" title="Permalink to this definition"></a></dt>
+<dd><p>Encode internal bytes as utf-8 string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenFixed.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_fixed.html#NeoGenFixed.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenFixed.encode" title="Permalink to this definition"></a></dt>
+<dd><p>Encode internal bytes as utf-8 string.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenFixed.size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#avro_neo_gen.core.NeoGenFixed.size" title="Permalink to this definition"></a></dt>
+<dd><p>Maximum number of stored bytes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenRecord">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.</span></span><span class="sig-name descname"><span class="pre">NeoGenRecord</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_record.html#NeoGenRecord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenRecord" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject" title="avro_neo_gen.core.abstract_neo_gen_object.AbstractNeoGenObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractNeoGenObject</span></code></a></p>
+<p>Generated RecordSchema base class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenRecord.decode">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_record.html#NeoGenRecord.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenRecord.decode" title="Permalink to this definition"></a></dt>
+<dd><p>Ingest datum to internal state, munging based on spec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.core.NeoGenRecord.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/neo_gen_record.html#NeoGenRecord.encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.NeoGenRecord.encode" title="Permalink to this definition"></a></dt>
+<dd><p>Encode record as avro json.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-avro_neo_gen.core.utils">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-avro_neo_gen.core.utils" title="Permalink to this heading"></a></h2>
+<p>Public utility functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.core.utils.record_builder_internal">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.utils.</span></span><span class="sig-name descname"><span class="pre">record_builder_internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cls'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/core/utils.html#record_builder_internal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.utils.record_builder_internal" title="Permalink to this definition"></a></dt>
+<dd><p>Build a Record datum dict based on the kwargs of the enclosing method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params self_name</dt>
+<dd class="field-odd"><p>The name of the <cite>self</cite> argument in the enclosing method.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#avro_neo_gen.core.NeoGenRecord" title="avro_neo_gen.core.NeoGenRecord"><code class="xref py py-class docutils literal notranslate"><span class="pre">avro_neo_gen.core.NeoGenRecord</span></code></a> instance datum dict.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">record_builder_internal</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span><span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">bar</span><span class="o">=</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span>
+<span class="go">{&quot;foo&quot;: 10, &quot;bar&quot;: &quot;Hello world&quot;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-avro_neo_gen.core.type_defs">
+<span id="type-defs"></span><h2>Type Defs<a class="headerlink" href="#module-avro_neo_gen.core.type_defs" title="Permalink to this heading"></a></h2>
+<p>Shared type declarations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroArrayTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroArrayTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroArrayTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroArrayTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Array schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">default_value</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroEnumTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroEnumTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroEnumTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroEnumTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Enum schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;enum&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;aliases&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="s2">&quot;symbols&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroFixedDecimalTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroFixedDecimalTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroFixedDecimalTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Array schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;aliases&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroFixedTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroFixedTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroFixedTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroFixedTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Array schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;aliases&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroMapTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroMapTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroMapTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroMapTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Array schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;map&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">default_value</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroPrimitiveTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroPrimitiveTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroPrimitiveTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Primitive schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroRecordFieldTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroRecordFieldTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroRecordFieldTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroRecordFieldTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Record field schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">default_value</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.core.type_defs.AvroRecordTypeDef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.core.type_defs.</span></span><span class="sig-name descname"><span class="pre">AvroRecordTypeDef</span></span><a class="reference internal" href="_modules/avro_neo_gen/core/type_defs.html#AvroRecordTypeDef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.core.type_defs.AvroRecordTypeDef" title="Permalink to this definition"></a></dt>
+<dd><p>Record schema type definition per spec 1.11.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Schema</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">&quot;aliases&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">schema</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="CLI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="internals.html" class="btn btn-neutral float-right" title="Internals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zachary Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

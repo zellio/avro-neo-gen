@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI &mdash; Avro NeoGen  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Core Library" href="core.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Avro NeoGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#avro-neo-gen">avro-neo-gen</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro-neo-gen-compile">compile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro-neo-gen-list-drivers">list-drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Avro NeoGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">CLI</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cli">
+<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h1>
+<section id="avro-neo-gen">
+<h2>avro-neo-gen<a class="headerlink" href="#avro-neo-gen" title="Permalink to this heading"></a></h2>
+<p>Avro NeoGen: Typed code generation for Avro schemas and protocols.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>avro-neo-gen <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-l">
+<span id="cmdoption-avro-neo-gen-log-level"></span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--log-level</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;log_level&gt;</span></span><a class="headerlink" href="#cmdoption-avro-neo-gen-l" title="Permalink to this definition"></a></dt>
+<dd><p>Log level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">info</span></code></p>
+</dd>
+<dt class="field-even">Options</dt>
+<dd class="field-even"><p>critical | error | warning | info | debug</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-L">
+<span id="cmdoption-avro-neo-gen-log-format"></span><span class="sig-name descname"><span class="pre">-L</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--log-format</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;log_format&gt;</span></span><a class="headerlink" href="#cmdoption-avro-neo-gen-L" title="Permalink to this definition"></a></dt>
+<dd><p>Log format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">plain</span></code></p>
+</dd>
+<dt class="field-even">Options</dt>
+<dd class="field-even"><p>plain | json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Environment variables</p>
+<span class="target" id="avro-neo-gen-log-level-avro-neogen-log-level"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_LOG_LEVEL</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-l"><code class="xref std std-option docutils literal notranslate"><span class="pre">-l</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<span class="target" id="avro-neo-gen-log-format-avro-neogen-log-format"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_LOG_FORMAT</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-L"><code class="xref std std-option docutils literal notranslate"><span class="pre">-L</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<section id="avro-neo-gen-compile">
+<h3>compile<a class="headerlink" href="#avro-neo-gen-compile" title="Permalink to this heading"></a></h3>
+<p>Compile Avro schema files into a typed Python module.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>avro-neo-gen compile <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-compile-a">
+<span id="cmdoption-avro-neo-gen-compile-avro-source-directory"></span><span class="sig-name descname"><span class="pre">-a</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--avro-source-directory</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;avro_source_directory&gt;</span></span><a class="headerlink" href="#cmdoption-avro-neo-gen-compile-a" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Required</strong> Directory which contains Avro schema and protocol definitions.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-compile-p">
+<span id="cmdoption-avro-neo-gen-compile-python-target-directory"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--python-target-directory</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;python_target_directory&gt;</span></span><a class="headerlink" href="#cmdoption-avro-neo-gen-compile-p" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Required</strong> Base directory to write out generated file tree</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">./build</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-compile-D">
+<span id="cmdoption-avro-neo-gen-compile-d"></span><span id="cmdoption-avro-neo-gen-compile-avro-driver"></span><span class="sig-name descname"><span class="pre">-D</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--avro-driver</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;avro_driver&gt;</span></span><a class="headerlink" href="#cmdoption-avro-neo-gen-compile-D" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Required</strong> Driver for managing avro data in generated code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">apache_avro_binary_driver</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-compile-0">
+<span id="cmdoption-avro-neo-gen-compile-dry-run"></span><span class="sig-name descname"><span class="pre">-d</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--dry-run</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-avro-neo-gen-compile-0" title="Permalink to this definition"></a></dt>
+<dd><p>Generate code without writing files to disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-avro-neo-gen-compile-f">
+<span id="cmdoption-avro-neo-gen-compile-force"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--force</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-avro-neo-gen-compile-f" title="Permalink to this definition"></a></dt>
+<dd><p>Force generation of Python library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Environment variables</p>
+<span class="target" id="avro-neo-gen-compile-avro-source-directory-avro-neogen-compile-source-directory"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_COMPILE_SOURCE_DIRECTORY</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-compile-a"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<span class="target" id="avro-neo-gen-compile-python-target-directory-avro-neogen-compile-target-directory"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_COMPILE_TARGET_DIRECTORY</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-compile-p"><code class="xref std std-option docutils literal notranslate"><span class="pre">-p</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<span class="target" id="avro-neo-gen-compile-avro-driver-avro-neogen-compile-driver"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_COMPILE_DRIVER</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-compile-D"><code class="xref std std-option docutils literal notranslate"><span class="pre">-D</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<span class="target" id="avro-neo-gen-compile-dry-run-avro-neogen-compile-dry-run"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_COMPILE_DRY_RUN</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-compile-0"><code class="xref std std-option docutils literal notranslate"><span class="pre">-d</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+<span class="target" id="avro-neo-gen-compile-force-avro-neogen-compile-force"></span><dl class="std envvar">
+<dt class="sig sig-object std">
+<span class="sig-name descname"><span class="pre">AVRO_NEOGEN_COMPILE_FORCE</span></span></dt>
+<dd><blockquote>
+<div><p>Provide a default for <a class="reference internal" href="#cmdoption-avro-neo-gen-compile-f"><code class="xref std std-option docutils literal notranslate"><span class="pre">-f</span></code></a></p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="avro-neo-gen-list-drivers">
+<h3>list-drivers<a class="headerlink" href="#avro-neo-gen-list-drivers" title="Permalink to this heading"></a></h3>
+<p>List provided Avro protocol drivers.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>avro-neo-gen list-drivers <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core.html" class="btn btn-neutral float-right" title="Core Library" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zachary Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

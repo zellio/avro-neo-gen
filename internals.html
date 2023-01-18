@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Internals &mdash; Avro NeoGen  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Core Library" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Avro NeoGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Library</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Internals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-avro_neo_gen.lexer">Lexer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.lexer.read_path"><code class="docutils literal notranslate"><span class="pre">read_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-avro_neo_gen.parser">Parser</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.parser.parse_schema"><code class="docutils literal notranslate"><span class="pre">parse_schema()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-avro_neo_gen.compiler">Compiler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.compiler.compile_avro_schema"><code class="docutils literal notranslate"><span class="pre">compile_avro_schema()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.compiler.compile_avro_schema_record_body"><code class="docutils literal notranslate"><span class="pre">compile_avro_schema_record_body()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.compiler.compile_avro_schema_record_builder"><code class="docutils literal notranslate"><span class="pre">compile_avro_schema_record_builder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.compiler.compile_avro_schema_type_signature"><code class="docutils literal notranslate"><span class="pre">compile_avro_schema_type_signature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.compiler.compile_parser_namespace_map"><code class="docutils literal notranslate"><span class="pre">compile_parser_namespace_map()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-avro_neo_gen.linker">Linker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.linker.avro_schema_required_imports"><code class="docutils literal notranslate"><span class="pre">avro_schema_required_imports()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.linker.emit_linker_file_map"><code class="docutils literal notranslate"><span class="pre">emit_linker_file_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.linker.inject_corelib_sys_path_shim"><code class="docutils literal notranslate"><span class="pre">inject_corelib_sys_path_shim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.linker.link_compiler_namespace_map"><code class="docutils literal notranslate"><span class="pre">link_compiler_namespace_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.linker.link_corelib"><code class="docutils literal notranslate"><span class="pre">link_corelib()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.linker.link_module"><code class="docutils literal notranslate"><span class="pre">link_module()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema"><code class="docutils literal notranslate"><span class="pre">AvroSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.__eq__"><code class="docutils literal notranslate"><span class="pre">AvroSchema.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.__getattr__"><code class="docutils literal notranslate"><span class="pre">AvroSchema.__getattr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.__iter__"><code class="docutils literal notranslate"><span class="pre">AvroSchema.__iter__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.contained_schemas"><code class="docutils literal notranslate"><span class="pre">AvroSchema.contained_schemas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.fullname"><code class="docutils literal notranslate"><span class="pre">AvroSchema.fullname</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.fullname_components"><code class="docutils literal notranslate"><span class="pre">AvroSchema.fullname_components</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.is_container"><code class="docutils literal notranslate"><span class="pre">AvroSchema.is_container</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.is_named"><code class="docutils literal notranslate"><span class="pre">AvroSchema.is_named</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.name"><code class="docutils literal notranslate"><span class="pre">AvroSchema.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.namespace"><code class="docutils literal notranslate"><span class="pre">AvroSchema.namespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.namespace_components"><code class="docutils literal notranslate"><span class="pre">AvroSchema.namespace_components</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema.schema"><code class="docutils literal notranslate"><span class="pre">AvroSchema.schema</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#type-defs">Type Defs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avro_neo_gen.type_defs.CompilerNamespaceMapCell"><code class="docutils literal notranslate"><span class="pre">CompilerNamespaceMapCell</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Avro NeoGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Internals</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/internals.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="internals">
+<h1>Internals<a class="headerlink" href="#internals" title="Permalink to this heading"></a></h1>
+<section id="module-avro_neo_gen.lexer">
+<span id="lexer"></span><h2>Lexer<a class="headerlink" href="#module-avro_neo_gen.lexer" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.lexer.read_path">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.lexer.</span></span><span class="sig-name descname"><span class="pre">read_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'avsc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Schema</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/lexer/read_path.html#read_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.lexer.read_path" title="Permalink to this definition"></a></dt>
+<dd><p>Read avro schema files into memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Source directory containing avro schema files.</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – Extension of Avro schema files to be lexed, defaults to <code class="docutils literal notranslate"><span class="pre">&quot;avsc&quot;</span></code>.</p></li>
+<li><p><strong>encoding</strong> (<em>str</em>) – Text encoding of Avro schema files, defaults to <code class="docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A stream of avro schema files loaded into memory as Apache Avro objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[Schema]:</p>
+</dd>
+</dl>
+<p>Conceptually, one schema is a “token” for our compiler.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the extension of the <code class="docutils literal notranslate"><span class="pre">path</span></code> parameter matches the
+<code class="docutils literal notranslate"><span class="pre">extension</span></code> parameter then <code class="docutils literal notranslate"><span class="pre">read_path</span></code> will assume it is lexing a
+single file, otherwise it will search for all files under <code class="docutils literal notranslate"><span class="pre">path</span></code>
+with the provided <code class="docutils literal notranslate"><span class="pre">extension</span></code>.</p>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-avro_neo_gen.parser">
+<span id="parser"></span><h2>Parser<a class="headerlink" href="#module-avro_neo_gen.parser" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.parser.parse_schema">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.parser.</span></span><span class="sig-name descname"><span class="pre">parse_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schemas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Schema</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">avro_neo_gen.avro_schema.AvroSchema</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/parser/parse_schema.html#parse_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.parser.parse_schema" title="Permalink to this definition"></a></dt>
+<dd><p>Expand Avro schemas and their contained types into a namespace map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>schemas</strong> (Iterable[<code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code>]) – Avro schemas to be parsed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Namespace maping of schemas.</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ParserNamespaceMap</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-avro_neo_gen.compiler">
+<span id="compiler"></span><h2>Compiler<a class="headerlink" href="#module-avro_neo_gen.compiler" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.compiler.compile_avro_schema">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_avro_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">avro_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">AvroSchema</span></a><span class="p"><span class="pre">[</span></span><span class="pre">NamedSchema</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ast.AST</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/compiler/compile_avro_schema.html#compile_avro_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.compiler.compile_avro_schema" title="Permalink to this definition"></a></dt>
+<dd><p>Compile a named Avro schema into Python AST.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>avro_schema</strong> (<a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><em>AvroSchema</em></a>) – Instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code> which contains a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.NamedSchema</span></code> to be compiled.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of Python AST nodes which comprise the bases of the
+compiled source.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">ast.AST</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.compiler.compile_avro_schema_record_body">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_avro_schema_record_body</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">avro_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">AvroSchema</span></a><span class="p"><span class="pre">[</span></span><span class="pre">RecordSchema</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ast.FunctionDef</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/compiler/compile_avro_schema_record_body.html#compile_avro_schema_record_body"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.compiler.compile_avro_schema_record_body" title="Permalink to this definition"></a></dt>
+<dd><p>Compile Record body init and property functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of <code class="xref py py-class docutils literal notranslate"><span class="pre">ast.AST</span></code> functions for the internals of a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">NeoGenRecord</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[<code class="xref py py-class docutils literal notranslate"><span class="pre">ast.FunctionDef</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.compiler.compile_avro_schema_record_builder">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_avro_schema_record_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">avro_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">AvroSchema</span></a><span class="p"><span class="pre">[</span></span><span class="pre">RecordSchema</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ClassDef</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/compiler/compile_avro_schema_record_builder.html#compile_avro_schema_record_builder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.compiler.compile_avro_schema_record_builder" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a Builder class def for a given AvroSchema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>avro_schema</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema`[:class:`avro.schema.RecordSchema</span></code>]) – <code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code> containing a RecordSchema to
+generate a builder class for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Python AST representation of the Builder class for a given AvroSchema.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ast.ClassDef</span></code></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only Record types get builders, everything else is self building.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.compiler.compile_avro_schema_type_signature">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_avro_schema_type_signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">avro_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">AvroSchema</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Schema</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AST</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/compiler/compile_avro_schema_type_signature.html#compile_avro_schema_type_signature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.compiler.compile_avro_schema_type_signature" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a Python type signature from an Avro Schema or Protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>avro_schema</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema`[:class:`avro.schema.Schema</span></code>]) – Avro type to be compiled.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Python AST type signature</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ast.AST</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.compiler.compile_parser_namespace_map">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_parser_namespace_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">avro_neo_gen.avro_schema.AvroSchema</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.type_defs.CompilerNamespaceMapCell" title="avro_neo_gen.type_defs.CompilerNamespaceMapCell"><span class="pre">avro_neo_gen.type_defs.CompilerNamespaceMapCell</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/compiler/compile_parser_namespace_map.html#compile_parser_namespace_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.compiler.compile_parser_namespace_map" title="Permalink to this definition"></a></dt>
+<dd><p>Compile parser namespace map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>CompilerNamespaceMap</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">CompilerNamespaceMap</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-avro_neo_gen.linker">
+<span id="linker"></span><h2>Linker<a class="headerlink" href="#module-avro_neo_gen.linker" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.linker.avro_schema_required_imports">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.linker.</span></span><span class="sig-name descname"><span class="pre">avro_schema_required_imports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">avro_schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><span class="pre">AvroSchema</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Schema</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/linker/avro_schema_required_imports.html#avro_schema_required_imports"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.linker.avro_schema_required_imports" title="Permalink to this definition"></a></dt>
+<dd><p>Identify required imports for a AvroSchema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>avro_schmea</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema[:class:`avro.schema.Schema</span></code>]`) – AvroSchema container of the Schema whos required
+imports we are resolving.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Map of namespace to set of classes required by the provided schema.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">LinkerRequiredImports</span></code></p>
+</dd>
+</dl>
+<p>An objects requirements are considered to be the union of its requirements
+and the requirements of all of its contained schemas.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently requirement resolution is done from the source schema
+rather than generated AST. This is in large part for ease of linking
+and identification of external dependencies.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.linker.emit_linker_file_map">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.linker.</span></span><span class="sig-name descname"><span class="pre">emit_linker_file_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linker_file_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ast.Module</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./build'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/linker/emit_linker_file_map.html#emit_linker_file_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.linker.emit_linker_file_map" title="Permalink to this definition"></a></dt>
+<dd><p>Write a linker file map to disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>linker_file_map</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">LinkerFileMap</span></code>) – Linker file map to commit to disk.</p></li>
+<li><p><strong>base_path</strong> (Union[str, <code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.Path</span></code>]) – Base path to write generated files and directories.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.linker.inject_corelib_sys_path_shim">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.linker.</span></span><span class="sig-name descname"><span class="pre">inject_corelib_sys_path_shim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linker_file_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ast.Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ast.Module</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/linker/inject_corelib_sys_path_shim.html#inject_corelib_sys_path_shim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.linker.inject_corelib_sys_path_shim" title="Permalink to this definition"></a></dt>
+<dd><p>Inject corelib sys path loader shim.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>linker_file_map</strong> (<em>LinkerFileMap</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Updated <code class="xref py py-class docutils literal notranslate"><span class="pre">LinkerPathMap</span></code> with the inject loader shim.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">LinkerPathMap</span></code></p>
+</dd>
+</dl>
+<p>On load, the corelib updates Python’s module path to include the root of
+the generated source tree. This is done so the <code class="docutils literal notranslate"><span class="pre">avro_neo_gen.core</span></code>
+namespace can be properly loaded.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loader shim</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pathlib</span>
+
+<span class="n">lib_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
+<span class="k">if</span> <span class="n">lib_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lib_path</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.linker.link_compiler_namespace_map">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.linker.</span></span><span class="sig-name descname"><span class="pre">link_compiler_namespace_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compiler_namespace_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.type_defs.CompilerNamespaceMapCell" title="avro_neo_gen.type_defs.CompilerNamespaceMapCell"><span class="pre">avro_neo_gen.type_defs.CompilerNamespaceMapCell</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ast.Module</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/linker/link_compiler_namespace_map.html#link_compiler_namespace_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.linker.link_compiler_namespace_map" title="Permalink to this definition"></a></dt>
+<dd><p>Link compiler namespace map into a linker file map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>compiler_namespace_map</strong> (<em>CompilerNamespaceMap</em>) – Compiler namespace map to link.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Linked namespace map ready for merging with corelib.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">avro_neo_gen.type_defs.LinkerFileMap</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.linker.link_corelib">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.linker.</span></span><span class="sig-name descname"><span class="pre">link_corelib</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ast.Module</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/linker/link_corelib.html#link_corelib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.linker.link_corelib" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a file map of the current corelib.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>File map of the current corelib files.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">avro_neo_gen.type_defs.LinkerFileMap</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avro_neo_gen.linker.link_module">
+<span class="sig-prename descclassname"><span class="pre">avro_neo_gen.linker.</span></span><span class="sig-name descname"><span class="pre">link_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#avro_neo_gen.type_defs.CompilerNamespaceMapCell" title="avro_neo_gen.type_defs.CompilerNamespaceMapCell"><span class="pre">avro_neo_gen.type_defs.CompilerNamespaceMapCell</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ast.Module</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/linker/link_module.html#link_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.linker.link_module" title="Permalink to this definition"></a></dt>
+<dd><p>Link compiled namespace map into final module file map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>namespace_map</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">CompilerNamespaceMap</span></code>) – Source compiled namespace map to link and join with corelib.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Final linked namepsace map for emitting to disk.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">LinkerFileMap</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.avro_schema.</span></span><span class="sig-name descname"><span class="pre">AvroSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/avro_neo_gen/avro_schema.html#AvroSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<p>Wrapper class for Apache Avro Schema types.</p>
+<p>Provide additional functionality for <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code>.</p>
+<p><a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a> extends the Apache Avro interface to smooth out
+differences in the underlying types so the are easier to operate on.</p>
+<p>Importantly <a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a> guarantees that <cite>name</cite> and <cite>namespace</cite> are
+safe to call, returning <cite>None</cite> when the field is missing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>schema</strong> (Union[<a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">T</span></code>]) – An <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code> instance or an
+<a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a> instance to be wrapped.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If provided schema</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Class can be safely called on <a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a>, which will
+return a new instance which re-wraps the previously wrapped value.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/avro_schema.html#AvroSchema.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.__eq__" title="Permalink to this definition"></a></dt>
+<dd><p>Delegate equality to contained schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Object</span></code>) – <code class="xref py py-class docutils literal notranslate"><span class="pre">Object</span></code> to be compared against.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>True</cite> if contained <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code> is equal to
+<code class="docutils literal notranslate"><span class="pre">other</span></code> or the <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code> contained therein.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.__getattr__">
+<span class="sig-name descname"><span class="pre">__getattr__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/avro_neo_gen/avro_schema.html#AvroSchema.__getattr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.__getattr__" title="Permalink to this definition"></a></dt>
+<dd><p>Delegate missing attributes to <code class="docutils literal notranslate"><span class="pre">self.schema</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – Field name</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Any</span></code></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Wraps internal values in <a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a> before
+returning if the value is an <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code>.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/avro_schema.html#AvroSchema.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.__iter__" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate over <code class="docutils literal notranslate"><span class="pre">self.contained_schemas()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Value returned by calling <code class="docutils literal notranslate"><span class="pre">self.contained_schemas</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Iterator[<a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.contained_schemas">
+<span class="sig-name descname"><span class="pre">contained_schemas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/avro_neo_gen/avro_schema.html#AvroSchema.contained_schemas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.contained_schemas" title="Permalink to this definition"></a></dt>
+<dd><p>Iterate over type definitions contained within schema.</p>
+<p>This method is only really valid on instances for which,
+<code class="docutils literal notranslate"><span class="pre">self.is_container</span></code> is <cite>True</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Iterable across contained schemas</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">Iterable[AvroSchema]</span></code></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Wraps internal values in instances of <a class="reference internal" href="#avro_neo_gen.avro_schema.AvroSchema" title="avro_neo_gen.avro_schema.AvroSchema"><code class="xref py py-class docutils literal notranslate"><span class="pre">AvroSchema</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.fullname">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fullname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.fullname" title="Permalink to this definition"></a></dt>
+<dd><p>Safe proxy to <code class="docutils literal notranslate"><span class="pre">self.schema.fullname</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Contained schema fullname if it is an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.NamedSchema</span></code>, None otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.fullname_components">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fullname_components</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.fullname_components" title="Permalink to this definition"></a></dt>
+<dd><p>Split self.fullname on standard delimiter: .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Components of fullname as a list, empty if there is no
+fullname.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.is_container">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_container</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.is_container" title="Permalink to this definition"></a></dt>
+<dd><p>Contained schema type check as object property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><cite>True</cite> if contained <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code> can contain
+other type definitions, <cite>False</cite> otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.is_named">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_named</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.is_named" title="Permalink to this definition"></a></dt>
+<dd><p>Contained schema type check as object property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><cite>True</cite> if contained <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code> is an
+instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.NamedSchema</span></code>, <cite>Flase</cite> otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.name" title="Permalink to this definition"></a></dt>
+<dd><p>Safe proxy to <code class="docutils literal notranslate"><span class="pre">self.schema.name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Contained schema name if it is an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.NamedSchema</span></code>, None otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.namespace">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">namespace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.namespace" title="Permalink to this definition"></a></dt>
+<dd><p>Safe proxy to <code class="docutils literal notranslate"><span class="pre">self.schema.namespace</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Contained schema namespace if it is an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">avro.schema.NamedSchema</span></code>, None otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.namespace_components">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">namespace_components</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.namespace_components" title="Permalink to this definition"></a></dt>
+<dd><p>Split <code class="docutils literal notranslate"><span class="pre">self.namespace</span></code> on standard delimiter: <cite>.</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Components of namespace as a list, empty if there is no
+namespace.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="avro_neo_gen.avro_schema.AvroSchema.schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">T</span></em><a class="headerlink" href="#avro_neo_gen.avro_schema.AvroSchema.schema" title="Permalink to this definition"></a></dt>
+<dd><p>Contained Avro schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">self._schema</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">avro.schema.Schema</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="type-defs">
+<h2>Type Defs<a class="headerlink" href="#type-defs" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="avro_neo_gen.type_defs.CompilerNamespaceMapCell">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avro_neo_gen.type_defs.</span></span><span class="sig-name descname"><span class="pre">CompilerNamespaceMapCell</span></span><a class="reference internal" href="_modules/avro_neo_gen/type_defs.html#CompilerNamespaceMapCell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#avro_neo_gen.type_defs.CompilerNamespaceMapCell" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>Internal data class for compiler namespace.</p>
+<p>Contains the schema and compiled AST for the schema. Namespace is gathered
+from the parent key of the list containing the cell in the namespace map.</p>
+</dd></dl>
+
+<span class="target" id="module-avro_neo_gen.type_defs"></span><p>Internal type defs.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core.html" class="btn btn-neutral float-left" title="Core Library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zachary Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

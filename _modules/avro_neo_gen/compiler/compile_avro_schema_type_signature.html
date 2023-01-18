@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>avro_neo_gen.compiler.compile_avro_schema_type_signature &mdash; Avro NeoGen  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Avro NeoGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">Core Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internals.html">Internals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Avro NeoGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">avro_neo_gen.compiler.compile_avro_schema_type_signature</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for avro_neo_gen.compiler.compile_avro_schema_type_signature</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Compile a python AST for the type signature of a given Avro schema.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">AST</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> <span class="n">Load</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Subscript</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">avro.schema</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ArraySchema</span><span class="p">,</span>
+    <span class="n">Field</span><span class="p">,</span>
+    <span class="n">LogicalSchema</span><span class="p">,</span>
+    <span class="n">MapSchema</span><span class="p">,</span>
+    <span class="n">NamedSchema</span><span class="p">,</span>
+    <span class="n">PrimitiveSchema</span><span class="p">,</span>
+    <span class="n">Schema</span><span class="p">,</span>
+    <span class="n">UnionSchema</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">avro_neo_gen.avro_schema</span> <span class="kn">import</span> <span class="n">AvroSchema</span>
+<span class="kn">from</span> <span class="nn">avro_neo_gen.utils</span> <span class="kn">import</span> <span class="n">pyast_load_name</span>
+
+
+<span class="k">def</span> <span class="nf">_logical_schema_type_signature</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">[</span><span class="n">LogicalSchema</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Name</span><span class="p">:</span>
+    <span class="k">match</span> <span class="n">avro_schema</span><span class="o">.</span><span class="n">logical_type</span><span class="p">:</span>  <span class="c1"># noqa: R503 - Base case raises exception</span>
+        <span class="k">case</span> <span class="s2">&quot;uuid&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;UUID&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;time-millis&quot;</span> <span class="o">|</span> <span class="s2">&quot;time-micros&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;timestamp-millis&quot;</span> <span class="o">|</span> <span class="s2">&quot;timestamp-micros&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;datetime&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">def</span> <span class="nf">_primitve_schmea_type_signautre</span><span class="p">(</span>
+    <span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">PrimitiveSchema</span><span class="p">,</span> <span class="n">LogicalSchema</span><span class="p">]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Constant</span><span class="p">,</span> <span class="n">Name</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Generate a type signature Python AST.</span>
+
+<span class="sd">    :param avro_schema: An Avro Primitive Schema.</span>
+<span class="sd">    :type AvroSchema: :class:`avro.schema.PrimitiveSchema`</span>
+<span class="sd">    :returns: Python AST of the primitive type signature, usually just the</span>
+<span class="sd">        name of the type.</span>
+<span class="sd">    :rtype: :class:`ast.AST`</span>
+
+<span class="sd">    Type signatures are fairly obvious, with most of them being either direct</span>
+<span class="sd">    translations or shortening of the Avro Types.</span>
+
+<span class="sd">    Per the spec the mapping is:</span>
+<span class="sd">      null     = None</span>
+<span class="sd">      boolean  = bool</span>
+<span class="sd">      int      = int</span>
+<span class="sd">      long     = int</span>
+<span class="sd">      float    = float</span>
+<span class="sd">      double   = float</span>
+<span class="sd">      bytes    = bytearray</span>
+<span class="sd">      string   = str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">avro_schema</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">LogicalSchema</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">NotImplementedError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_logical_schema_type_signature</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">)</span>
+
+    <span class="k">match</span> <span class="n">avro_schema</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>  <span class="c1"># noqa: R503 - Base case raises exception</span>
+        <span class="k">case</span> <span class="s2">&quot;null&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Constant</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;boolean&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;bool&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;int&quot;</span> <span class="o">|</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;float&quot;</span> <span class="o">|</span> <span class="s2">&quot;double&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;bytes&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;bytearray&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">def</span> <span class="nf">_array_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AST</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generate a type signature Python AST.</span>
+
+<span class="sd">    Type signature is: list[ items&#39; type ]</span>
+
+<span class="sd">    :param avro_schema: An Avro Array Schema.</span>
+<span class="sd">    :type AvroSchema: avro.schema.ArraySchema</span>
+<span class="sd">    :returns: AST</span>
+<span class="sd">    :rtype: ast.AST</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Subscript</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;list&quot;</span><span class="p">),</span>
+        <span class="nb">slice</span><span class="o">=</span><span class="n">compile_avro_schema_type_signature</span><span class="p">(</span><span class="n">avro_schema</span><span class="o">.</span><span class="n">items</span><span class="p">),</span>
+        <span class="n">ctx</span><span class="o">=</span><span class="n">Load</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_map_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AST</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generate a type signature Python AST.</span>
+
+<span class="sd">    Type signature is: dict[str, values&#39; type ]</span>
+
+<span class="sd">    :param avro_schema: An Avro Map Schema.</span>
+<span class="sd">    :type AvroSchema: avro.schema.MapSchema</span>
+<span class="sd">    :returns: AST</span>
+<span class="sd">    :rtype: ast.AST</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Subscript</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;dict&quot;</span><span class="p">),</span>
+        <span class="nb">slice</span><span class="o">=</span><span class="n">Tuple</span><span class="p">(</span>
+            <span class="n">elts</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">),</span>
+                <span class="n">compile_avro_schema_type_signature</span><span class="p">(</span><span class="n">avro_schema</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+            <span class="p">],</span>
+            <span class="n">ctx</span><span class="o">=</span><span class="n">Load</span><span class="p">(),</span>
+        <span class="p">),</span>
+        <span class="n">ctx</span><span class="o">=</span><span class="n">Load</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_union_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AST</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generate type signature for an Avro Union Schema.</span>
+
+<span class="sd">    Method will generate either an Optional or a Union.</span>
+
+<span class="sd">    :param avro_schema: Avro Schema of a Union type.</span>
+<span class="sd">    :type avro_schema: UnionSchema</span>
+<span class="sd">    :returns: AST</span>
+<span class="sd">    :rtype: ast.AST</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schemas</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">avro_schema</span><span class="o">.</span><span class="n">schemas</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">schema</span><span class="p">:</span> <span class="n">schema</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="n">optional_schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">schema</span> <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">schemas</span> <span class="k">if</span> <span class="n">schema</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;null&quot;</span><span class="p">]</span>
+
+    <span class="n">python_ast</span><span class="p">:</span> <span class="n">AST</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">optional_schemas</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Subscript</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;Optional&quot;</span><span class="p">),</span>
+            <span class="nb">slice</span><span class="o">=</span><span class="n">compile_avro_schema_type_signature</span><span class="p">(</span><span class="n">optional_schemas</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">ctx</span><span class="o">=</span><span class="n">Load</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+    <span class="n">etls</span> <span class="o">=</span> <span class="p">[</span><span class="n">compile_avro_schema_type_signature</span><span class="p">(</span><span class="n">AvroSchema</span><span class="p">(</span><span class="n">schema</span><span class="p">))</span> <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">optional_schemas</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">optional_schemas</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">schemas</span><span class="p">):</span>
+        <span class="n">etls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Constant</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">Subscript</span><span class="p">(</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">pyast_load_name</span><span class="p">(</span><span class="s2">&quot;Union&quot;</span><span class="p">),</span>
+        <span class="nb">slice</span><span class="o">=</span><span class="n">Tuple</span><span class="p">(</span><span class="n">elts</span><span class="o">=</span><span class="n">etls</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">Load</span><span class="p">()),</span>
+        <span class="n">ctx</span><span class="o">=</span><span class="n">Load</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_named_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AST</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generate a name reference to the generated class.</span>
+
+<span class="sd">    :param avro_schema: An Avro Named Schema.</span>
+<span class="sd">    :type AvroSchema: avro.schema.NamedSchema</span>
+<span class="sd">    :returns: AST</span>
+<span class="sd">    :rtype: ast.Name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">avro_schema</span> <span class="o">=</span> <span class="n">AvroSchema</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">avro_schema</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Constant</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">avro_schema</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compile_avro_schema_type_signature"><a class="viewcode-back" href="../../../internals.html#avro_neo_gen.compiler.compile_avro_schema_type_signature">[docs]</a><span class="k">def</span> <span class="nf">compile_avro_schema_type_signature</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">:</span> <span class="n">AvroSchema</span><span class="p">[</span><span class="n">Schema</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AST</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generate a Python type signature from an Avro Schema or Protocol.</span>
+
+<span class="sd">    :param avro_schema: Avro type to be compiled.</span>
+<span class="sd">    :type avro_schema: :class:`AvroSchema`[:class:`avro.schema.Schema`]</span>
+<span class="sd">    :returns: Python AST type signature</span>
+<span class="sd">    :rtype: :class:`ast.AST`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">match</span> <span class="n">avro_schema</span><span class="o">.</span><span class="n">schema</span><span class="p">:</span>  <span class="c1"># noqa: R503 - Base case raises exception</span>
+        <span class="k">case</span> <span class="n">PrimitiveSchema</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">_primitve_schmea_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">ArraySchema</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">_array_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">MapSchema</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">_map_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">UnionSchema</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">_union_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">Field</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">compile_avro_schema_type_signature</span><span class="p">(</span><span class="n">AvroSchema</span><span class="p">(</span><span class="n">avro_schema</span><span class="o">.</span><span class="n">type</span><span class="p">))</span>
+        <span class="k">case</span> <span class="n">NamedSchema</span><span class="p">():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">_named_schema_type_signautre</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">)</span>
+        <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zachary Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

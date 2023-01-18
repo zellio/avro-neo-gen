@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avro Neogene &mdash; Avro NeoGen  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> Avro NeoGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Avro NeoGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Avro Neogene</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="avro-neogene">
+<h1>Avro Neogene<a class="headerlink" href="#avro-neogene" title="Permalink to this heading"></a></h1>
+<p>Typed Python code generation library for <a class="reference external" href="https://avro.apache.org/">Apache Avro</a> schemas.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<p>Code generation requires <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">3.11</span></code> or newer.</p>
+<p>Generated code requires <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">3.6</span></code> or newer.</p>
+<blockquote>
+<div><p><strong><em>NOTE:</em></strong> Generated code has no dependencies other than core python
+libraries.</p>
+</div></blockquote>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>First install a copy of <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">3.11</span></code> or newer, either via your operating
+system’s repos or via <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pyenv install <span class="m">3</span>.11
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">avro-neo-gen</span></code> is primarily a CLI tool, it is easiest to install via <a class="reference external" href="https://pypa.github.io/pipx/">pipx</a>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">declare</span> <span class="nv">python_prefix</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>pyenv prefix <span class="m">3</span>.11<span class="k">)</span><span class="s2">&quot;</span>
+pipx install --python <span class="s2">&quot;</span><span class="nv">$python_prefix</span><span class="s2">&quot;</span>/bin/python avro-neo-gen
+</pre></div>
+</div>
+<p>If you would rather install the package manually, you can do so via pip:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python -m pip install avro-neo-gen
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<p>…</p>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading"></a></h2>
+<p>Bug reports and pull requests are welcome on GitHub at
+https://github.com/[USERNAME]/avro-neo-gen. This project is intended to be a
+safe, welcoming space for collaboration, and contributors are expected to
+adhere to the <span class="xref myst">code of conduct</span>.</p>
+</section>
+<section id="copyright">
+<h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this heading"></a></h2>
+<p>BSD 3 Clause (New BSD)
+Copyright © 2022, Zachary Elliott <a class="reference external" href="mailto:contact&#37;&#52;&#48;zell&#46;io">contact<span>&#64;</span>zell<span>&#46;</span>io</a></p>
+<!-- Reference links -->
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#avro-neo-gen">avro-neo-gen</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#protocols">Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#meta-classes">Meta Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#abstract-classes">Abstract Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-avro_neo_gen.core.utils">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-avro_neo_gen.core.type_defs">Type Defs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Internals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internals.html#module-avro_neo_gen.lexer">Lexer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html#module-avro_neo_gen.parser">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html#module-avro_neo_gen.compiler">Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html#module-avro_neo_gen.linker">Linker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html#type-defs">Type Defs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zachary Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

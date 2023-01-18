@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>avro_neo_gen.linker.link_compiler_namespace_map &mdash; Avro NeoGen  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Avro NeoGen
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">Core Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../internals.html">Internals</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Avro NeoGen</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">avro_neo_gen.linker.link_compiler_namespace_map</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for avro_neo_gen.linker.link_compiler_namespace_map</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Link compiler namespace map into a linker file map.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">ImportFrom</span><span class="p">,</span> <span class="n">Module</span><span class="p">,</span> <span class="n">alias</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+
+<span class="kn">from</span> <span class="nn">avro_neo_gen.linker.avro_schema_required_imports</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">avro_schema_required_imports</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">avro_neo_gen.type_defs</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CompilerNamespaceMap</span><span class="p">,</span>
+    <span class="n">CompilerNamespaceMapCell</span><span class="p">,</span>
+    <span class="n">LinkerFileMap</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">avro_neo_gen.utils</span> <span class="kn">import</span> <span class="n">dict_func_reduce</span><span class="p">,</span> <span class="n">flat_map</span>
+
+
+<span class="k">def</span> <span class="nf">_link_map_entry</span><span class="p">(</span><span class="n">cells</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">CompilerNamespaceMapCell</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Module</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Determine requirements for a schema and link the AST.</span>
+
+<span class="sd">    :param cells: Internal :class:`CompilerNamespaceMap` list of cells containing</span>
+<span class="sd">        avro schemas and compiled AST</span>
+<span class="sd">    :type cells: Iterable[:class:`CompilerNamespaceMapCell`]</span>
+<span class="sd">    :return: Fully linked python AST for exporting</span>
+<span class="sd">    :rtype: :class:`ast.Module`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_cells</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cells</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">cell</span><span class="p">:</span> <span class="n">cell</span><span class="p">[</span><span class="s2">&quot;schema&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">schemas</span> <span class="o">=</span> <span class="p">(</span><span class="n">cell</span><span class="p">[</span><span class="s2">&quot;schema&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">sorted_cells</span><span class="p">)</span>
+    <span class="n">required_imports</span> <span class="o">=</span> <span class="n">dict_func_reduce</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="n">avro_schema_required_imports</span><span class="p">,</span> <span class="n">schemas</span><span class="p">))</span>
+    <span class="n">required_imports_ast</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ImportFrom</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="n">alias</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">required_imports</span><span class="p">[</span><span class="n">module</span><span class="p">])],</span>
+            <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">required_imports</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Module</span><span class="p">(</span>
+        <span class="n">body</span><span class="o">=</span><span class="p">[</span>
+            <span class="o">*</span><span class="n">required_imports_ast</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">(</span><span class="n">flat_map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cell</span><span class="p">:</span> <span class="n">cell</span><span class="p">[</span><span class="s2">&quot;ast&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="p">[],</span> <span class="n">cells</span><span class="p">)),</span>
+        <span class="p">],</span>
+        <span class="n">type_ignores</span><span class="o">=</span><span class="p">[],</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="link_compiler_namespace_map"><a class="viewcode-back" href="../../../internals.html#avro_neo_gen.linker.link_compiler_namespace_map">[docs]</a><span class="k">def</span> <span class="nf">link_compiler_namespace_map</span><span class="p">(</span><span class="n">compiler_namespace_map</span><span class="p">:</span> <span class="n">CompilerNamespaceMap</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LinkerFileMap</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Link compiler namespace map into a linker file map.</span>
+
+<span class="sd">    :param compiler_namespace_map: Compiler namespace map to link.</span>
+<span class="sd">    :type compiler_namespace_map: CompilerNamespaceMap</span>
+<span class="sd">    :return: Linked namespace map ready for merging with corelib.</span>
+<span class="sd">    :rtype: :class:`avro_neo_gen.type_defs.LinkerFileMap`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path_base</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">path_base</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="o">*</span><span class="n">namespace</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">):</span> <span class="n">_link_map_entry</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">cells</span> <span class="ow">in</span> <span class="n">compiler_namespace_map</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zachary Elliott.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
